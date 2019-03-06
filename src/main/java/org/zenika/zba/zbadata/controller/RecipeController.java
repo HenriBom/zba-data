@@ -20,58 +20,65 @@ public class RecipeController {
     @GetMapping(value = "/Recipe")
     public List<Recipe> listRecipe() throws RecipeNotFindException {
         List<Recipe> recipe = recipeDao.findAll();
-        if(recipe == null) throw new RecipeNotFindException("No recipe find");
+        if (recipe == null) throw new RecipeNotFindException("No recipe find");
         return recipe;
     }
 
     @GetMapping(value = "/Recipe/id{value}")
     public Recipe findRecipeId(@PathVariable int value) throws RecipeNotFindException {
         Recipe recipe = recipeDao.findById(value);
-        if(recipe == null) throw new RecipeNotFindException("No recipe find for this id");
+        if (recipe == null) throw new RecipeNotFindException("No recipe find for this id");
         return recipe;
     }
 
     @GetMapping(value = "/Recipe/name{value}")
     public Recipe findRecipeName(@PathVariable String value) throws RecipeNotFindException {
         Recipe recipe = recipeDao.findByName(value);
-        if(recipe == null) throw new RecipeNotFindException("No recipe find for this name");
+        if (recipe == null) throw new RecipeNotFindException("No recipe find for this name");
         return recipe;
     }
 
     @GetMapping(value = "/Recipe/ingredientType{value}")
     public List<Recipe> findRecipeIngredientType(@PathVariable String value) throws RecipeNotFindException {
         List<Recipe> recipe = recipeDao.findByIngredientType(value);
-        if(recipe == null) throw new RecipeNotFindException("No recipe find");
+        if (recipe == null) throw new RecipeNotFindException("No recipe find");
         return recipe;
     }
 
     @GetMapping(value = "/Recipe/malt{value}")
     public List<Recipe> findRecipeMalt(@PathVariable String value) throws RecipeNotFindException {
         List<Recipe> recipe = recipeDao.findByMalt(value);
-        if(recipe == null) throw new RecipeNotFindException("No recipe find");
+        if (recipe == null) throw new RecipeNotFindException("No recipe find");
         return recipe;
     }
 
     @GetMapping(value = "/Recipe/userId{value}")
     public List<Recipe> findRecipeCreator(@PathVariable String value) throws RecipeNotFindException {
         List<Recipe> recipe = recipeDao.findByCreator(value);
-        if(recipe == null) throw new RecipeNotFindException("No recipe find");
+        if (recipe == null) throw new RecipeNotFindException("No recipe find");
         return recipe;
     }
 
-    @DeleteMapping(value ="/Recipe{value}")
+    @DeleteMapping(value = "/Recipe{value}")
     public String deleteRecipe(@PathVariable String value) throws RecipeNotFindException {
         Recipe recipe = recipeDao.findByName(value);
-        if(recipe == null) throw new RecipeNotFindException("No recipe find for this name");
-        System.out.println(value);
-        System.out.println(recipe);
+        if (recipe == null) throw new RecipeNotFindException("No recipe find for this name");
         recipeDao.delete(recipe);
         return "Deleted";
     }
 
-    @PostMapping(value ="/Recipe")
+    @PostMapping(value = "/Recipe")
     public Recipe addRecipe(@RequestBody Recipe recipe) {
+        System.out.println("post");
+        recipeDao.save(recipe);
+        return recipe;
+    }
+
+    @PutMapping(value = "/Recipe")
+    public Recipe updateRecipe(@RequestBody Recipe recipe) {
+        System.out.println("put");
         recipeDao.save(recipe);
         return recipe;
     }
 }
+
