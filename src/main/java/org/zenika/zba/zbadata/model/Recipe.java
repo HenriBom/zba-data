@@ -6,7 +6,6 @@ import io.swagger.annotations.Api;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Set;
 
 @Api(description = "Object Recipe used to transfer data between the Rest API and the database")
 @Entity
