@@ -11,14 +11,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ZbaDataApplicationTests {
+public class ZbaDataRecipeTest {
 
-	@Autowired
-	private RecipeController recipeController;
+    @Autowired
+    private RecipeController recipeController;
 
-	@Test
-	public void contextLoads() {
-		assertThat(recipeController).isNotNull();
-	}
-}
-*/
+    @Test
+    public void contextLoads() {
+        assertThat(recipeController).isNotNull();
+    }
+}*/
