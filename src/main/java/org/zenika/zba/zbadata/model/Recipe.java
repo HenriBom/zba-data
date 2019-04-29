@@ -6,33 +6,33 @@ import io.swagger.annotations.Api;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Api(description = "Object Recipe used to transfer data between the Rest API and the database")
 @Entity
-@Table(name = "recipe")
 public class Recipe implements Serializable {
+
+    private long id;
+    private String name;
+    private String ingredientType;
+    private String malt;
+    private String creator;
+    private Set<RecipeStep> recipeStep;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    @Column(unique = true)
-    @NotNull
-    private String name;
-    @NonNull
-    private String ingredientType;
-    @NonNull
-    private String malt;
-    @NonNull
-    private String creator;
-
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
+    @Column(unique = true)
+    @NotNull
     public String getName() {
         return name;
     }
@@ -41,6 +41,7 @@ public class Recipe implements Serializable {
         this.name = name;
     }
 
+    @NonNull
     public String getIngredientType() {
         return ingredientType;
     }
@@ -49,6 +50,7 @@ public class Recipe implements Serializable {
         this.ingredientType = ingredientType;
     }
 
+    @NonNull
     public String getMalt() {
         return malt;
     }
@@ -57,12 +59,22 @@ public class Recipe implements Serializable {
         this.malt = malt;
     }
 
+    @NonNull
     public String getCreator() {
         return creator;
     }
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    @OneToMany(mappedBy = "recipe")
+    public Set<RecipeStep> getStep() {
+        return recipeStep;
+    }
+
+    public void setStep(Set<RecipeStep> step) {
+        this.recipeStep = step;
     }
 
     @Override
@@ -73,6 +85,7 @@ public class Recipe implements Serializable {
                 ", ingredientType='" + ingredientType + '\'' +
                 ", malt='" + malt + '\'' +
                 ", creator='" + creator + '\'' +
+                ", step=" + recipeStep +
                 '}';
     }
 }
