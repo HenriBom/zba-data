@@ -1,5 +1,6 @@
 package org.zenika.zba.zbadata.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.Api;
 
@@ -8,14 +9,14 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Set;
 
-@Api(description = "Object Step used to transfer data beteween the Rest API and the database")
+@Api(description = "Abstract class Step used to join steps to the recipe_step table")
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Step implements Serializable {
+public abstract class Step implements Serializable {
 
     private long id;
     private int selectedStep;
-    private String description;
     private Set<RecipeStep> recipeStep;
 
     @Id
@@ -37,15 +38,8 @@ public class Step implements Serializable {
         this.selectedStep = selectedStep;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @OneToMany(mappedBy = "step", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     public Set<RecipeStep> getRecipe() {
         return recipeStep;
     }
@@ -59,7 +53,6 @@ public class Step implements Serializable {
         return "Step{" +
                 "id=" + id +
                 ", selectedStep=" + selectedStep +
-                ", description='" + description + '\'' +
                 ", recipe=" + recipeStep +
                 '}';
     }

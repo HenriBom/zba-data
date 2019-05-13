@@ -1,5 +1,6 @@
 package org.zenika.zba.zbadata.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.micrometer.core.lang.NonNull;
 import io.swagger.annotations.Api;
 
@@ -69,6 +70,7 @@ public class Recipe implements Serializable {
     }
 
     @OneToMany(mappedBy = "recipe")
+    @JsonBackReference
     public Set<RecipeStep> getStep() {
         return recipeStep;
     }

@@ -1,5 +1,7 @@
 package org.zenika.zba.zbadata.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.Api;
 
 import javax.persistence.*;
@@ -35,7 +37,7 @@ public class RecipeStep implements Serializable {
         this.recipe = recipe;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "step_id")
     public Step getStep() {
         return step;
