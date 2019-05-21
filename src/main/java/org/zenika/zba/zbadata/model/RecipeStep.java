@@ -1,9 +1,6 @@
 package org.zenika.zba.zbadata.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.Api;
-
 import javax.persistence.*;
 import java.io.Serializable;
 

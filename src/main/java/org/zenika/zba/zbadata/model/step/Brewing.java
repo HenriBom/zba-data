@@ -12,7 +12,7 @@ import javax.persistence.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Brewing extends Step {
 
-    private int timeH, timMin, heat, water;
+    private int timeH, timeMin, heat, water;
     private String hopperId;            // to map to hopper ingredient
     private String description;
 
@@ -24,12 +24,12 @@ public class Brewing extends Step {
         this.timeH = timeH;
     }
 
-    public int getTimMin() {
-        return timMin;
+    public int getTimeMin() {
+        return timeMin;
     }
 
-    public void setTimMin(int timMin) {
-        this.timMin = timMin;
+    public void setTimeMin(int timMin) {
+        this.timeMin = timMin;
     }
 
     public int getHeat() {

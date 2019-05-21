@@ -15,6 +15,7 @@ import java.util.List;
 public interface RecipeDao extends JpaRepository<Recipe,Integer> {
     Recipe findById(int id);
     Recipe findByName(String name);
+    List<Recipe> findAll();
     List<Recipe> findByIngredientType(String ingredientType);
     List<Recipe> findByMalt(String malt);
     List<Recipe> findByCreator(String creator);

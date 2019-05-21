@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestComponent;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -19,19 +24,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(
-        classes = { H2JpaConfig.class },
-        loader = AnnotationConfigContextLoader.class)
+        classes = { H2JpaConfig.class })
 @Transactional
 @DataJpaTest
-@EntityScan( basePackages = {"org.zenika.zba.zbadata"})
+@TestComponent
+@ComponentScan("src.main.java.org.zenika.zba.zbadata")
+@EntityScan( basePackages = {"src.main.java.org.zenika.zba.zbadata.*"})
+@EnableJpaRepositories(basePackages = {"src.main.java.org.zenika.zba.zbadata.*"})
 @Ignore
 public class RecipeDaoTest {
 
     @Autowired
-    private RecipeDao recipeDao;
-
-    @Autowired
     private TestEntityManager entityManager;
+
+    @Autowired(required = true)
+    private RecipeDao recipeDao;
 
     @Test
     public void whenFindByName_thenReturnRecipe() {

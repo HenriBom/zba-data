@@ -2,6 +2,7 @@ package org.zenika.zba.zbadata.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zenika.zba.zbadata.controller.recipe.Save;
 import org.zenika.zba.zbadata.dao.RecipeDao;
@@ -16,6 +17,8 @@ import org.zenika.zba.zbadata.model.Step;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @Api(description = "Receive the CRUD command")
 @RestController
@@ -29,29 +32,29 @@ public class RecipeController {
     private StepDao stepDao;
 
     @GetMapping(value = "/Recipe")
-    public List<Recipe> listRecipe() throws RecipeNotFindException {
+    public ResponseEntity<List<Recipe>> listRecipe() throws RecipeNotFindException {
         List<Recipe> recipe = recipeDao.findAll();
         if (recipe == null) throw new RecipeNotFindException("No recipe found");
-        return recipe;
+        return ok(recipe);
     }
 
     @GetMapping(value = "/Steps{id}")
-    public List<Step> listSteps(@PathVariable long id) throws StepsNotFindException {
+    public ResponseEntity<List<Step>> listSteps(@PathVariable long id) throws StepsNotFindException {
         List<RecipeStep> recipeSteps = recipeStepDao.findByRecipeId(id);
         List<Step> steps = new ArrayList();
         for (RecipeStep recipeStep: recipeSteps) {
             steps.add(recipeStep.getStep());
         }
         if (steps == null) throw new StepsNotFindException("No step found");
-        return steps;
+        return ok(steps);
     }
 
     @DeleteMapping(value = "/Recipe{value}")
-    public String deleteRecipe(@PathVariable String value) throws RecipeNotFindException {
+    public ResponseEntity<String> deleteRecipe(@PathVariable String value) throws RecipeNotFindException {
         Recipe recipe = recipeDao.findByName(value);
         if (recipe == null) throw new RecipeNotFindException("No recipe found for this name");
         recipeDao.delete(recipe);
-        return "Deleted";
+        return ok("Deleted");
     }
 
     @PostMapping(value = "/Recipe")
