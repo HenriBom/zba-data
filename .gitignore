@@ -3,6 +3,9 @@
 mvnw
 mvnw.cmd
 out/
+mvnw
+mvnw.cmd
+zba-data.iml
 
 ### Target ###
 target/
