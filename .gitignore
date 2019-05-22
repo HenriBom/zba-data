@@ -2,6 +2,7 @@
 .mvn/
 mvnw
 mvnw.cmd
+out/
 
 ### Target ###
 target/
