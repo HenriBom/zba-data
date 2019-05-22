@@ -34,7 +34,7 @@ public class Save {
             JsonNode root = mapper.readTree(json);
             recipeString = root.path("recipe").toString();                  // select from Json
             System.out.println(root.path("recipeId").toString());
-            id = Long.parseLong(root.path("recipeId").toString());      // test if id != null
+            id = Long.parseLong(root.path("recipeId").toString());          // test if id != null
             Recipe recipe = mapper.readValue(recipeString, Recipe.class);   // map to model
             recipe.setId(id);                                               // add Id to recipe
             recipeDao.save(recipe);                                         // save to db

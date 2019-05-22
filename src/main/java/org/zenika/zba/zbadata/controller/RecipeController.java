@@ -2,6 +2,7 @@ package org.zenika.zba.zbadata.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zenika.zba.zbadata.controller.recipe.Save;
@@ -17,7 +18,7 @@ import org.zenika.zba.zbadata.model.Step;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Api(description = "Receive the CRUD command")
@@ -45,7 +46,7 @@ public class RecipeController {
         for (RecipeStep recipeStep: recipeSteps) {
             steps.add(recipeStep.getStep());
         }
-        if (steps == null) throw new StepsNotFindException("No step found");
+        if (steps.isEmpty()) throw new StepsNotFindException("No step found");
         return ok(steps);
     }
 
@@ -58,16 +59,16 @@ public class RecipeController {
     }
 
     @PostMapping(value = "/Recipe")
-    public Object addRecipe(@RequestBody Object object) {
+    public ResponseEntity<Object> addRecipe(@RequestBody Object object) {
         Save save = new Save();
-        System.out.println("post");
-        return save.saveFunction(object, recipeDao, recipeStepDao);
+        if (object == null) throw new NullPointerException("No body");
+        return ok(save.saveFunction(object, recipeDao, recipeStepDao));
     }
 
     @PutMapping(value = "/Recipe")
     public long updateRecipe(@RequestBody Object object) {
         Save save = new Save();
-        System.out.println("put");
+        if (object == null) throw new NullPointerException("No body");
         return save.saveFunction(object, recipeDao, recipeStepDao);
     }
 }

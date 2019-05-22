@@ -1,5 +1,7 @@
 package org.zenika.zba.zbadata;
 
+import com.mysql.cj.xdevapi.JsonString;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.zenika.zba.zbadata.config.H2JpaConfig;
 import org.zenika.zba.zbadata.controller.RecipeController;
+import org.zenika.zba.zbadata.controller.recipe.Save;
 import org.zenika.zba.zbadata.dao.RecipeDao;
 import org.zenika.zba.zbadata.dao.RecipeStepDao;
 import org.zenika.zba.zbadata.model.Recipe;
@@ -26,8 +29,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,6 +49,9 @@ public class RecipeControllerTest {
 
     @Mock
     private Set<RecipeStep> recipeStepSet;
+
+    @Mock
+    private Save save;
 
     @InjectMocks
     RecipeController recipeController;
@@ -121,7 +126,7 @@ public class RecipeControllerTest {
     }
 
     @Test
-    public void getRecipeById_expects200And2Element() throws Exception {
+    public void getStepsById_expects200And2Element() throws Exception {
 
         given(this.recipeStepDao.findByRecipeId(Long.valueOf(1))).willReturn(asList(recipeStep1, recipeStep2));
 
@@ -132,6 +137,16 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$.[0].selectedStep").value(1));
         verify(recipeStepDao, times(1)).findByRecipeId(Long.valueOf(1));
         verifyNoMoreInteractions(recipeStepDao);
+    }
+
+    @Test
+    public void getStepsById_expects404() throws Exception {
+
+        given(this.recipeStepDao.findByRecipeId(Long.valueOf(3))).willReturn(null);
+
+        this.mockMvc.perform(get("/Steps1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -149,13 +164,13 @@ public class RecipeControllerTest {
     }
 
     @Test
-    public void postRecipe_expects200And1Element() {
-        //TODO
-    }
+    public void deleteRecipeById_expects404() throws Exception {
 
-    @Test
-    public void updateRecipeById_expects200And1Element() {
-        //TODO
+        given(this.recipeDao.findByName("Name3")).willReturn(null);
+
+        this.mockMvc.perform(delete("/RecipeName3")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }
 
