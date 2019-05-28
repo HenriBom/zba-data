@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zenika.zba.zbadata.controller.recipe.SaveRecipe;
 import org.zenika.zba.zbadata.dao.RecipeDao;
-import org.zenika.zba.zbadata.dao.RecipeStepDao;
 import org.zenika.zba.zbadata.dao.StepDao;
 import org.zenika.zba.zbadata.exception.RecipeNotFindException;
 import org.zenika.zba.zbadata.exception.StepsNotFindException;
@@ -25,9 +24,9 @@ public class RecipeController {
     @Autowired
     private RecipeDao recipeDao;
     @Autowired
-    private RecipeStepDao recipeStepDao;
-    @Autowired
     private StepDao stepDao;
+    @Autowired
+    private SaveRecipe save;
 
     @GetMapping(value = "/Recipe")
     public ResponseEntity<List<Recipe>> listRecipe() throws RecipeNotFindException {
@@ -53,15 +52,13 @@ public class RecipeController {
 
     @PostMapping(value = "/Recipe")
     public ResponseEntity<Object> addRecipe(@RequestBody Object object) {
-        SaveRecipe save = new SaveRecipe();
         if (object == null) throw new NullPointerException("No body");
-        return ok(save.mainSave(object, recipeDao, stepDao));
+        return ok(save.mainSave(object));
     }
 
     @PutMapping(value = "/Recipe")
     public long updateRecipe(@RequestBody Object object) {
-        SaveRecipe save = new SaveRecipe();
         if (object == null) throw new NullPointerException("No body");
-        return save.mainSave(object, recipeDao, stepDao);
+        return save.mainSave(object);
     }
 }

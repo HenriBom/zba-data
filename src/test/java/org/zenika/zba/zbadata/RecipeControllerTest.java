@@ -1,7 +1,5 @@
 package org.zenika.zba.zbadata;
 
-import com.mysql.cj.xdevapi.JsonString;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,20 +14,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.zenika.zba.zbadata.config.H2JpaConfig;
 import org.zenika.zba.zbadata.controller.RecipeController;
-import org.zenika.zba.zbadata.controller.recipe.Save;
+import org.zenika.zba.zbadata.controller.recipe.SaveRecipe;
 import org.zenika.zba.zbadata.dao.RecipeDao;
 import org.zenika.zba.zbadata.dao.RecipeStepDao;
 import org.zenika.zba.zbadata.model.Recipe;
 import org.zenika.zba.zbadata.model.RecipeStep;
 import org.zenika.zba.zbadata.model.step.Sanitizing;
+
 import javax.transaction.Transactional;
 import java.util.Set;
+
 import static java.util.Arrays.asList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,7 +52,7 @@ public class RecipeControllerTest {
     private Set<RecipeStep> recipeStepSet;
 
     @Mock
-    private Save save;
+    private SaveRecipe save;
 
     @InjectMocks
     RecipeController recipeController;

@@ -1,13 +1,11 @@
 package org.zenika.zba.zbadata.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.Api;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Set;
 
 @Api(description = "Abstract class Step used to join steps to the recipe_step table")
 @Entity
