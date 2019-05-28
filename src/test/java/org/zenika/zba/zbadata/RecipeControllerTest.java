@@ -1,5 +1,6 @@
 package org.zenika.zba.zbadata;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import org.zenika.zba.zbadata.controller.RecipeController;
 import org.zenika.zba.zbadata.controller.recipe.SaveRecipe;
 import org.zenika.zba.zbadata.dao.RecipeDao;
 import org.zenika.zba.zbadata.dao.RecipeStepDao;
+import org.zenika.zba.zbadata.dao.StepDao;
 import org.zenika.zba.zbadata.model.Recipe;
 import org.zenika.zba.zbadata.model.RecipeStep;
 import org.zenika.zba.zbadata.model.step.Sanitizing;
@@ -25,14 +27,13 @@ import javax.transaction.Transactional;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ContextConfiguration(
         classes = { H2JpaConfig.class })
@@ -46,10 +47,7 @@ public class RecipeControllerTest {
     private RecipeDao recipeDao;
 
     @Mock
-    private RecipeStepDao recipeStepDao;
-
-    @Mock
-    private Set<RecipeStep> recipeStepSet;
+    private StepDao stepDao;
 
     @Mock
     private SaveRecipe save;
@@ -61,8 +59,6 @@ public class RecipeControllerTest {
 
     private Sanitizing step1, step2;
 
-    private RecipeStep recipeStep1, recipeStep2;
-
     @Before
     public void setup() {
 
@@ -72,17 +68,13 @@ public class RecipeControllerTest {
         recipe2 = new Recipe();
         step1 = new Sanitizing();
         step2 = new Sanitizing();
-        recipeStep1 = new RecipeStep();
-        recipeStep2 = new RecipeStep();
-
-        recipeStepSet.add(recipeStep1);
-        recipeStepSet.add(recipeStep2);
 
         recipe1.setId(1);
         recipe1.setName("Name1");
         recipe1.setIngredientType("Blonde");
         recipe1.setMalt("Malte");
         recipe1.setCreator("Creator1");
+        recipe1.setStep(asList(step1,step2));
 
         recipe2.setId(2);
         recipe2.setName("Name2");
@@ -95,19 +87,8 @@ public class RecipeControllerTest {
 
         step2.setId(2);
         step2.setSelectedStep(1);
-
-        recipeStep1.setId(Long.valueOf(1));
-        recipeStep1.setRecipe(recipe1);
-        recipeStep1.setStep(step1);
-        recipeStep1.setStepNumber(1);
-
-        recipeStep2.setId(Long.valueOf(1));
-        recipeStep2.setRecipe(recipe2);
-        recipeStep2.setStep(step2);
-        recipeStep2.setStepNumber(2);
     }
 
-    @Ignore
     @Test
     public void getAllRecipe_expects200And2Element() throws Exception {
 
@@ -125,23 +106,23 @@ public class RecipeControllerTest {
     @Test
     public void getStepsById_expects200And2Element() throws Exception {
 
-        given(this.recipeStepDao.findByRecipeId(Long.valueOf(1))).willReturn(asList(recipeStep1, recipeStep2));
+        given(this.stepDao.findByRecipeId(Long.valueOf(1))).willReturn(asList(step1, step2));
 
         this.mockMvc.perform(get("/Steps1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$.[0].selectedStep").value(1));
-        verify(recipeStepDao, times(1)).findByRecipeId(Long.valueOf(1));
-        verifyNoMoreInteractions(recipeStepDao);
+        verify(stepDao, times(1)).findByRecipeId(Long.valueOf(1));
+        verifyNoMoreInteractions(stepDao);
     }
 
     @Test
     public void getStepsById_expects404() throws Exception {
 
-        given(this.recipeStepDao.findByRecipeId(Long.valueOf(3))).willReturn(null);
+        given(this.stepDao.findByRecipeId(Long.valueOf(3))).willReturn(null);
 
-        this.mockMvc.perform(get("/Steps1")
+        this.mockMvc.perform(get("/Steps3")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -168,6 +149,38 @@ public class RecipeControllerTest {
         this.mockMvc.perform(delete("/RecipeName3")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Ignore
+    @Test
+    public void postRecipe_expects200AndLongId() throws Exception {
+
+        given(this.save.mainSave(recipe1)).willReturn(1L);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        this.mockMvc.perform(post("/Recipe")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(step1)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.id").value(1L));
+    }
+
+    @Ignore
+    @Test
+    public void putRecipe_expects200AndLongId() throws Exception {
+
+        given(this.save.mainSave(recipe1)).willReturn(1L);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        this.mockMvc.perform(post("/Recipe")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(step1)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.id").value(1L));
     }
 }
 

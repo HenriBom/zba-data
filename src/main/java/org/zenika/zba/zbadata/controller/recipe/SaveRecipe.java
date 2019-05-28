@@ -34,7 +34,6 @@ public class SaveRecipe {
             mapRecipe();
             addSteps();
             recipeDao.save(recipe);
-            id = recipeDao.findByName(recipe.getName()).getId();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
