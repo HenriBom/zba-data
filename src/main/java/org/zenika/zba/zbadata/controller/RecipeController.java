@@ -38,7 +38,7 @@ public class RecipeController {
     @GetMapping(value = "/Steps{id}")
     public ResponseEntity<List<Step>> listSteps(@PathVariable long id) throws StepsNotFindException {
         List<Step> steps = stepDao.findByRecipeId(id);
-        if (steps.isEmpty()) throw new StepsNotFindException("No step found");
+        if (steps == null || steps.isEmpty()) throw new StepsNotFindException("No step found");
         return ok(steps);
     }
 
@@ -57,8 +57,8 @@ public class RecipeController {
     }
 
     @PutMapping(value = "/Recipe")
-    public long updateRecipe(@RequestBody Object object) {
+    public ResponseEntity<Object> updateRecipe(@RequestBody Object object) {
         if (object == null) throw new NullPointerException("No body");
-        return save.mainSave(object);
+        return  ok(save.mainSave(object));
     }
 }
