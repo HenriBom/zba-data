@@ -82,22 +82,18 @@ public class RecipeControllerTest {
         recipe1.setIngredientType("Blonde");
         recipe1.setMalt("Malte");
         recipe1.setCreator("Creator1");
-        recipe1.setStep(recipeStepSet);
 
         recipe2.setId(2);
         recipe2.setName("Name2");
         recipe2.setIngredientType("Blonde");
         recipe2.setMalt("Malte");
         recipe2.setCreator("Creator2");
-        recipe2.setStep(recipeStepSet);
 
         step1.setId(1);
         step1.setSelectedStep(1);
-        step1.setRecipe(recipeStepSet);
 
         step2.setId(2);
         step2.setSelectedStep(1);
-        step2.setRecipe(recipeStepSet);
 
         recipeStep1.setId(Long.valueOf(1));
         recipeStep1.setRecipe(recipe1);

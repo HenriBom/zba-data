@@ -20,7 +20,7 @@ public class Recipe implements Serializable {
     private String ingredientType;
     private String malt;
     private String creator;
-    private Set<RecipeStep> recipeStep;
+    private List<Step> step;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -69,14 +69,14 @@ public class Recipe implements Serializable {
         this.creator = creator;
     }
 
-    @OneToMany(mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
-    public Set<RecipeStep> getStep() {
-        return recipeStep;
+    public List<Step> getStep() {
+        return step;
     }
 
-    public void setStep(Set<RecipeStep> step) {
-        this.recipeStep = step;
+    public void setStep(List<Step> step) {
+        this.step = step;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Recipe implements Serializable {
                 ", ingredientType='" + ingredientType + '\'' +
                 ", malt='" + malt + '\'' +
                 ", creator='" + creator + '\'' +
-                ", step=" + recipeStep +
+                ", step=" + step +
                 '}';
     }
 }
