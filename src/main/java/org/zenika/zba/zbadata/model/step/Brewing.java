@@ -2,6 +2,7 @@ package org.zenika.zba.zbadata.model.step;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.Api;
+import org.zenika.zba.zbadata.model.Recipe;
 import org.zenika.zba.zbadata.model.Step;
 
 import javax.persistence.*;

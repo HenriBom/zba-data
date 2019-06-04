@@ -1,13 +1,16 @@
 package org.zenika.zba.zbadata.controller.recipe;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zenika.zba.zbadata.dao.RecipeDao;
 import org.zenika.zba.zbadata.model.Recipe;
 import org.zenika.zba.zbadata.model.Step;
+import org.zenika.zba.zbadata.model.ingredient.Leaven;
 import org.zenika.zba.zbadata.model.step.*;
 
 import java.io.IOException;
@@ -27,30 +30,23 @@ public class SaveRecipe {
     private long id = 0;
 
     // java object to json -> take recipe and step from the json -> map to model -> save to db
-    public long mainSave(Object object) {
+    public long mainSave(String json) {
 
-        try {
-            json = mapper.writeValueAsString(object);                       // convert to json
-            mapRecipe();
-            addSteps();
-            recipeDao.save(recipe);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        this.json = json;
+        mapRecipe();
+        //addSteps();
+        //recipeDao.save(recipe);
         return id;
     }
 
     // map recipe
     private void mapRecipe() {
 
-        String recipeString = "";
-
         try {
             root = mapper.readTree(json);
-            recipeString = root.path("recipe").toString();                  // select from Json
-            id = Long.parseLong(root.path("recipeId").toString());          // test if id != null
-            recipe = mapper.readValue(recipeString, Recipe.class);   // map to model
-            recipe.setId(id);                                               // add Id to recipe
+            recipe = mapper.readValue(root.path("json").toString(), Recipe.class);          // map to model
+            recipeDao.save(recipe);
+            System.out.println(recipe);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -120,7 +116,7 @@ public class SaveRecipe {
                         default:
                             System.out.println("SelectedStep error");
                     }
-                    recipe.setStep(steps);
+                    recipe.setSteps(steps);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
