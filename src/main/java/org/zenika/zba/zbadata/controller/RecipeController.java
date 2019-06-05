@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
-import org.hibernate.mapping.Any;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +42,6 @@ public class RecipeController {
     public ResponseEntity<List<Step>> listSteps(@PathVariable long id) throws StepsNotFindException {
         System.out.println("test");
         List<Step> steps = stepDao.findByRecipeId(id);
-        if (steps == null || steps.isEmpty()) throw new StepsNotFindException("No step found");
         return ok(steps);
     }
 
@@ -61,21 +58,21 @@ public class RecipeController {
         if (json == null) throw new NullPointerException("No body");
         try {
             return ResponseEntity.created(new URI("db_zab_database")).body(saveRecipe(json));
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(json);
         }
     }
 
     @PutMapping(value = "/recipe/{id}")
     public ResponseEntity<Object> updateRecipe(@PathVariable long id, @RequestBody String json) {
-        if (json == null) throw new NullPointerException("No body");if (json == null) throw new NullPointerException("No body");
+        if (json == null) throw new NullPointerException("No body");
         try {
             if(recipeDao.findById(id) != null) {
                 return ResponseEntity.accepted().body(saveRecipe(json));
             } else {
-                throw new RecipeNotFindException("recipe not found");
+                return ResponseEntity.accepted().body(new RecipeNotFindException("recipe not found"));
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(json);
         }
     }

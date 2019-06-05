@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.Api;
-import org.zenika.zba.zbadata.model.ingredient.Leaven;
 import org.zenika.zba.zbadata.model.step.*;
 
 import javax.persistence.*;

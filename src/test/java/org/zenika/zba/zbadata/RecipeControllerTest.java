@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.zenika.zba.zbadata.config.H2JpaConfig;
 import org.zenika.zba.zbadata.controller.RecipeController;
-import org.zenika.zba.zbadata.controller.recipe.SaveRecipe;
 import org.zenika.zba.zbadata.dao.RecipeDao;
 import org.zenika.zba.zbadata.dao.StepDao;
 import org.zenika.zba.zbadata.model.Recipe;
@@ -45,9 +44,6 @@ public class RecipeControllerTest {
 
     @Mock
     private StepDao stepDao;
-
-    @Mock
-    private SaveRecipe save;
 
     @InjectMocks
     RecipeController recipeController;
@@ -152,7 +148,7 @@ public class RecipeControllerTest {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        given(this.save.mainSave(mapper.writeValueAsString(recipe1))).willReturn(1L);
+        //given(this.save.mainSave(mapper.writeValueAsString(recipe1))).willReturn(1L);
 
         this.mockMvc.perform(post("/recipe")
             .contentType(MediaType.APPLICATION_JSON)
@@ -166,7 +162,7 @@ public class RecipeControllerTest {
     @Test
     public void putRecipe_expects200AndLongId() throws Exception {
 
-        given(this.save.mainSave("recipe1")).willReturn(1L);
+        //given(this.save.mainSave("recipe1")).willReturn(1L);
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -189,6 +185,7 @@ question V1 is not working :
 @WebMvcTest(RecipeController.class)
 public class RecipeControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
 
     @MockBean

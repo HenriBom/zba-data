@@ -1,20 +1,13 @@
 package org.zenika.zba.zbadata.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.lang.NonNull;
 import io.swagger.annotations.Api;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Api(description = "Object Recipe used to transfer data between the Rest API and the database")
 @Entity
@@ -82,14 +75,6 @@ public class Recipe implements Serializable {
 
     public void setSteps(List<Step> step) {
         this.steps = step;
-    }
-
-    @JsonCreator
-    public static Recipe Create(String jsonString) throws JsonParseException, JsonMappingException, IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        Recipe module = null;
-        module = mapper.readValue(jsonString, Recipe.class);
-        return module;
     }
 
     @Override

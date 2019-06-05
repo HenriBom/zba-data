@@ -1,7 +1,6 @@
 package org.zenika.zba.zbadata.model.step;
 
 import io.swagger.annotations.Api;
-import org.zenika.zba.zbadata.model.Recipe;
 import org.zenika.zba.zbadata.model.Step;
 
 import javax.persistence.Entity;
