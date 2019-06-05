@@ -1,5 +1,6 @@
 package org.zenika.zba.zbadata.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -8,7 +9,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.zenika.zba.zbadata.controller.recipe.SaveRecipe;
 import org.zenika.zba.zbadata.dao.RecipeDao;
 import org.zenika.zba.zbadata.dao.StepDao;
 import org.zenika.zba.zbadata.exception.RecipeNotFindException;
@@ -18,6 +18,7 @@ import org.zenika.zba.zbadata.model.Step;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -31,8 +32,6 @@ public class RecipeController {
     private RecipeDao recipeDao;
     @Autowired
     private StepDao stepDao;
-    @Autowired
-    private SaveRecipe save;
 
     @GetMapping(value = "/recipes")
     public ResponseEntity<List<Recipe>> listRecipe() throws RecipeNotFindException {
@@ -61,16 +60,7 @@ public class RecipeController {
     public ResponseEntity<Object> addRecipe(@RequestBody String json) {
         if (json == null) throw new NullPointerException("No body");
         try {
-            Recipe recipe = new Recipe();
-            try {
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode root = mapper.readTree(json);
-                recipe = mapper.readValue(root.path("json").toString(), Recipe.class);          // map to model
-                recipeDao.save(recipe);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return ResponseEntity.created(new URI("db_zab_database")).body(recipe.getId());
+            return ResponseEntity.created(new URI("db_zab_database")).body(saveRecipe(json));
         }catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(json);
         }
@@ -80,13 +70,33 @@ public class RecipeController {
     public ResponseEntity<Object> updateRecipe(@PathVariable long id, @RequestBody String json) {
         if (json == null) throw new NullPointerException("No body");if (json == null) throw new NullPointerException("No body");
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(json);
-            Recipe recipe = mapper.readValue(root.path("json").toString(), Recipe.class);          // map to model
-            recipeDao.save(recipe);
-            return ResponseEntity.accepted().body(save.mainSave(json));
+            if(recipeDao.findById(id) != null) {
+                return ResponseEntity.accepted().body(saveRecipe(json));
+            } else {
+                throw new RecipeNotFindException("recipe not found");
+            }
         }catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(json);
         }
+    }
+
+    private Long saveRecipe(String json) {
+        List<Step> steps = new ArrayList();
+        Recipe recipe = new Recipe();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(json);
+            recipe = mapper.readValue(root.path("json").path("recipe").toString(), Recipe.class);          // map to model
+            recipe.setSteps(steps);
+            recipeDao.save(recipe);
+            steps = mapper.readValue(root.path("json").path("steps").toString(), new TypeReference<List<Step>>(){});
+            for(Step step : steps) {
+                step.setRecipe(recipe);
+                stepDao.save(step);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return recipe.getId();
     }
 }

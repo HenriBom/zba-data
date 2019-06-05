@@ -88,8 +88,7 @@ public class Recipe implements Serializable {
     public static Recipe Create(String jsonString) throws JsonParseException, JsonMappingException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         Recipe module = null;
-        module = mapper.readValue(jsonString, Recipe
-                .class);
+        module = mapper.readValue(jsonString, Recipe.class);
         return module;
     }
 

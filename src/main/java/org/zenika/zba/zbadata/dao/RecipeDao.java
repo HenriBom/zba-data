@@ -13,7 +13,7 @@ import java.util.List;
 @Api(tags = {"Tag1"})
 @Repository
 public interface RecipeDao extends JpaRepository<Recipe,Integer> {
-    Recipe findById(int id);
+    Recipe findById(Long id);
     Recipe findByName(String name);
     List<Recipe> findAll();
     List<Recipe> findByIngredientType(String ingredientType);
