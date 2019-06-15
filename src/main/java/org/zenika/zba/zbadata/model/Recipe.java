@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(description = "Object Recipe used to transfer data between the Rest API and the database")
@@ -18,7 +19,7 @@ public class Recipe implements Serializable {
     private String ingredientType;
     private String malt;
     private String creator;
-    private List<Step> steps;
+    private List<Step> steps = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -67,8 +68,7 @@ public class Recipe implements Serializable {
         this.creator = creator;
     }
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Step> getSteps() {
         return steps;
     }

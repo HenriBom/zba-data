@@ -13,13 +13,20 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Filtering extends Step {
 
-    private String test;
+    private String description;
 
-    public String getTest() {
-        return test;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Filtering{" +
+                "description='" + description + '\'' +
+                '}';
     }
 }

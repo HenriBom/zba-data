@@ -15,5 +15,4 @@ import java.util.List;
 public interface StepDao extends JpaRepository<Step,Integer> {
     Step findById(int id);
     List<Step> findBySelectedStep(int type);
-    List<Step> findByRecipeId(long id);
 }

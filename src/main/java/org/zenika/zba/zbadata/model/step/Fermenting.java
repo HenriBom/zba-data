@@ -13,13 +13,50 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Fermenting extends Step {
 
-    private String test;
+    private int day;
+    private int temperature;
+    private int pressure;
+    private String description;
 
-    public String getTest() {
-        return test;
+    public int getTemperature() {
+        return temperature;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setTemperature(int temperature) {
+        this.temperature = temperature;
+    }
+
+    public int getPressure() {
+        return pressure;
+    }
+
+    public void setPressure(int pressure) {
+        this.pressure = pressure;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Fermenting{" +
+                "day=" + day +
+                ", temperature=" + temperature +
+                ", pressure=" + pressure +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

@@ -13,13 +13,29 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Density extends Step {
 
-    private String test;
+    private String description, density;
 
-    public String getTest() {
-        return test;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDensity() {
+        return density;
+    }
+
+    public void setDensity(String density) {
+        this.density = density;
+    }
+
+    @Override
+    public String toString() {
+        return "Density{" +
+                "description='" + description + '\'' +
+                ", density='" + density + '\'' +
+                '}';
     }
 }

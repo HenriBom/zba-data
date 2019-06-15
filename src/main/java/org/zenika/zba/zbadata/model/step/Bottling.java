@@ -11,13 +11,31 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name = "bottlingId")
 public class Bottling extends Step {
 
-    private String test;
+    private int size;
 
-    public String getTest() {
-        return test;
+    private String description;
+
+    public int getSize() {
+        return size;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Bottling{" +
+                "size=" + size +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

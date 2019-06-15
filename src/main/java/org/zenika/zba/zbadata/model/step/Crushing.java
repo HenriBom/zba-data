@@ -13,13 +13,29 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Crushing extends Step {
 
-    private String test;
+    private String description, malt;
 
-    public String getTest() {
-        return test;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getMalt() {
+        return malt;
+    }
+
+    public void setMalt(String malt) {
+        this.malt = malt;
+    }
+
+    @Override
+    public String toString() {
+        return "Crushing{" +
+                "description='" + description + '\'' +
+                ", malt='" + malt + '\'' +
+                '}';
     }
 }
