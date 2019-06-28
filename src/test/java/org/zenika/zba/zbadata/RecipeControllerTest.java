@@ -97,21 +97,21 @@ public class RecipeControllerTest {
     @Test
     public void getStepsById_expects200And2Element() throws Exception {
 
-        given(this.stepDao.findByRecipeId(Long.valueOf(1))).willReturn(asList(step1, step2));
+        //given(this.stepDao.findByRecipeId(Long.valueOf(1))).willReturn(asList(step1, step2));
 
         this.mockMvc.perform(get("/recipe/1/steps")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$.[0].selectedStep").value(1));
-        verify(stepDao, times(1)).findByRecipeId(Long.valueOf(1));
+        //verify(stepDao, times(1)).findByRecipeId(Long.valueOf(1));
         verifyNoMoreInteractions(stepDao);
     }
 
     @Test
     public void getStepsById_expects404() throws Exception {
 
-        given(this.stepDao.findByRecipeId(Long.valueOf(3))).willReturn(null);
+        //given(this.stepDao.findByRecipeId(Long.valueOf(3))).willReturn(null);
 
         this.mockMvc.perform(get("/recipe/3/steps")
                 .accept(MediaType.APPLICATION_JSON))

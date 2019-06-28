@@ -33,7 +33,6 @@ public abstract class Step implements Serializable {
 
     private long id;
     private int selectedStep;
-    private Recipe recipe;
 
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
@@ -54,22 +53,11 @@ public abstract class Step implements Serializable {
         this.selectedStep = selectedStep;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
-    }
-
     @Override
     public String toString() {
         return "Step{" +
                 "id=" + id +
                 ", selectedStep=" + selectedStep +
-                ", recipe=" + recipe +
                 '}';
     }
 }

@@ -1,6 +1,5 @@
 package org.zenika.zba.zbadata.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -10,13 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import org.zenika.zba.zbadata.dao.RecipeDao;
 import org.zenika.zba.zbadata.dao.StepDao;
 import org.zenika.zba.zbadata.exception.RecipeNotFindException;
-import org.zenika.zba.zbadata.exception.StepsNotFindException;
+import org.zenika.zba.zbadata.exception.StepsNotFoundException;
 import org.zenika.zba.zbadata.model.Recipe;
 import org.zenika.zba.zbadata.model.Step;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -39,9 +37,9 @@ public class RecipeController {
     }
 
     @GetMapping(value = "/recipe/{id}/steps")
-    public ResponseEntity<List<Step>> listSteps(@PathVariable long id) throws StepsNotFindException {
-        System.out.println("test");
-        List<Step> steps = stepDao.findByRecipeId(id);
+    public ResponseEntity<List<Step>> listSteps(@PathVariable long id) throws StepsNotFoundException {
+        Recipe recipe = recipeDao.findById(id);
+        List<Step> steps = recipe.getSteps();
         return ok(steps);
     }
 
@@ -57,7 +55,16 @@ public class RecipeController {
     public ResponseEntity<Object> addRecipe(@RequestBody String json) {
         if (json == null) throw new NullPointerException("No body");
         try {
-            return ResponseEntity.created(new URI("db_zab_database")).body(saveRecipe(json));
+            Recipe recipe = new Recipe();
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode root = mapper.readTree(json);
+                recipe = mapper.readValue(root.toString(), Recipe.class);          // map to model
+                recipeDao.save(recipe);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return ResponseEntity.created(new URI("db_zab_database")).body(recipe.getId());
         } catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(json);
         }
@@ -67,33 +74,18 @@ public class RecipeController {
     public ResponseEntity<Object> updateRecipe(@PathVariable long id, @RequestBody String json) {
         if (json == null) throw new NullPointerException("No body");
         try {
+            Recipe recipe;
             if(recipeDao.findById(id) != null) {
-                return ResponseEntity.accepted().body(saveRecipe(json));
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode root = mapper.readTree(json);
+                recipe = mapper.readValue(root.toString(), Recipe.class);          // map to model
+                recipeDao.save(recipe);
+                return ResponseEntity.accepted().body(recipe);
             } else {
-                return ResponseEntity.accepted().body(new RecipeNotFindException("recipe not found"));
+                return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(json);
         }
-    }
-
-    private Long saveRecipe(String json) {
-        List<Step> steps = new ArrayList();
-        Recipe recipe = new Recipe();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(json);
-            recipe = mapper.readValue(root.path("json").path("recipe").toString(), Recipe.class);          // map to model
-            recipe.setSteps(steps);
-            recipeDao.save(recipe);
-            steps = mapper.readValue(root.path("json").path("steps").toString(), new TypeReference<List<Step>>(){});
-            for(Step step : steps) {
-                step.setRecipe(recipe);
-                stepDao.save(step);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return recipe.getId();
     }
 }

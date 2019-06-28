@@ -13,13 +13,49 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Colding extends Step {
 
-    private String test2;
+    private int timeH, timeMin, heat;
 
-    public String getTest2() {
-        return test2;
+    private String description;
+
+    public int getTimeH() {
+        return timeH;
     }
 
-    public void setTest2(String test2) {
-        this.test2 = test2;
+    public void setTimeH(int timeH) {
+        this.timeH = timeH;
+    }
+
+    public int getTimeMin() {
+        return timeMin;
+    }
+
+    public void setTimeMin(int timeMin) {
+        this.timeMin = timeMin;
+    }
+
+    public int getHeat() {
+        return heat;
+    }
+
+    public void setHeat(int heat) {
+        this.heat = heat;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Colding{" +
+                "timeH=" + timeH +
+                ", timeMin=" + timeMin +
+                ", heat=" + heat +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
